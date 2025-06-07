@@ -3,11 +3,16 @@ name = "beeai-agents"
 version = "0.1.1"
 description = "Add your description here"
 readme = "README.md"
-authors = [{ name = "IBM Corp." }]
+authors = [{ name = "Titus Lim" }]
 requires-python = ">=3.11,<4.0"
 dependencies = [
     "acp-sdk>=0.8.1",
+    "docling>=2.36.1",
+    "llama-index>=0.12.40",
+    "llama-index-embeddings-ollama>=0.6.0",
+    "llama-index-llms-ollama>=0.6.1",
     "pyyaml>=6.0.2",
+    "llama-index-readers-docling>=0.3.3",
 ]
 
 [tool.ruff]
