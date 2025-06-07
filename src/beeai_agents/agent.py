@@ -74,7 +74,7 @@ server = Server()
         framework using the Docling technical paper as its knowledge base. 
         
         The agent is designed to work in streaming mode, providing answers as they
-        are generated.
+        are generated. Runs using Qwen 3:8b.
         """
     )
 )
