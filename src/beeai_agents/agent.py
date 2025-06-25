@@ -1,36 +1,41 @@
 ## Reference: https://medium.com/mitb-for-all/a-guide-to-code-testing-rag-agents-without-real-llms-or-vector-dbs-51154ad920be
 import os
+from dotenv import load_dotenv, find_dotenv
 import warnings
 from collections.abc import AsyncGenerator
 
 from acp_sdk import Message, MessagePart, Metadata
 from acp_sdk.server import RunYield, RunYieldResume, Server
 
-from llama_index.core import Settings, VectorStoreIndex
+from llama_index.core import Settings, VectorStoreIndex, SimpleDirectoryReader
 from llama_index.core.agent.workflow import FunctionAgent, AgentStream
 from llama_index.core.tools import QueryEngineTool, ToolMetadata
-from llama_index.core.node_parser import MarkdownNodeParser
-from llama_index.readers.docling import DoclingReader
-from llama_index.llms.ollama import Ollama
-from llama_index.embeddings.ollama import OllamaEmbedding
+# from llama_index.core.node_parser import MarkdownNodeParser
+# from llama_index.readers.docling import DoclingReader
+from llama_index.llms.gemini import Gemini
+from llama_index.embeddings.gemini import GeminiEmbedding
 
 warnings.filterwarnings("ignore")
 
+_ = load_dotenv(find_dotenv())
+
 ## Load document
-reader = DoclingReader()
-node_parser = MarkdownNodeParser()
-documents = reader.load_data("https://arxiv.org/pdf/2408.09869")
+# reader = DoclingReader()
+# node_parser = MarkdownNodeParser()
+# documents = reader.load_data("https://arxiv.org/pdf/2408.09869")
+
+documents = SimpleDirectoryReader(input_dir="./data").load_data()
 
 ## Create RAG query engine
 # Settings.llm = OpenAI("gpt-4o-mini", temperature=0)
 # Settings.embed_model = OpenAIEmbeddings()
 
-Settings.llm = Ollama("qwen2.5", temperature=0)
-Settings.embed_model = OllamaEmbedding(model_name="nomic-embed-text")
+Settings.llm = Gemini(model="models/gemini-2.5-flash", temperature=0)
+Settings.embed_model = GeminiEmbedding()
 
 index = VectorStoreIndex.from_documents(
     documents=documents,
-    transformations=[node_parser]
+    # transformations=[node_parser]
 )
 query_engine = index.as_query_engine()
 
