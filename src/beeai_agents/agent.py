@@ -1,6 +1,5 @@
 ## Reference: https://medium.com/mitb-for-all/a-guide-to-code-testing-rag-agents-without-real-llms-or-vector-dbs-51154ad920be
 import os
-from dotenv import load_dotenv, find_dotenv
 import warnings
 from collections.abc import AsyncGenerator
 
@@ -12,12 +11,10 @@ from llama_index.core.agent.workflow import FunctionAgent, AgentStream
 from llama_index.core.tools import QueryEngineTool, ToolMetadata
 # from llama_index.core.node_parser import MarkdownNodeParser
 # from llama_index.readers.docling import DoclingReader
-from llama_index.llms.gemini import Gemini
-from llama_index.embeddings.gemini import GeminiEmbedding
+from llama_index.llms.ollama import Ollama
+from llama_index.embeddings.ollama import OllamaEmbedding
 
 warnings.filterwarnings("ignore")
-
-_ = load_dotenv(find_dotenv())
 
 ## Load document
 # reader = DoclingReader()
@@ -30,8 +27,8 @@ documents = SimpleDirectoryReader(input_dir="./data").load_data()
 # Settings.llm = OpenAI("gpt-4o-mini", temperature=0)
 # Settings.embed_model = OpenAIEmbeddings()
 
-Settings.llm = Gemini(model="models/gemini-2.5-flash", temperature=0)
-Settings.embed_model = GeminiEmbedding()
+Settings.llm = Ollama(model="qwen3:latest", temperature=0)
+Settings.embed_model = OllamaEmbedding(model_name="nomic-embed-text")
 
 index = VectorStoreIndex.from_documents(
     documents=documents,
